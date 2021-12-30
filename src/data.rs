@@ -1,3 +1,5 @@
+use std::fmt::{Binary, Debug};
+
 // A bitfield data trait that can be implemented on un-signed integer types
 pub trait BitfieldData:
     std::ops::BitAnd<Output = Self>
@@ -10,6 +12,8 @@ pub trait BitfieldData:
     + Copy
     + Sized
     + Default
+    + Binary 
+    + Debug
 {
     fn default_one() -> Self;
 }

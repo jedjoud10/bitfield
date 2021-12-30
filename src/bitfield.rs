@@ -1,12 +1,31 @@
+use std::fmt::{Debug, Display};
+
 use crate::data::BitfieldData;
 
 // A simple bitfield that contains a generic
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Bitfield<T>
 where
     T: BitfieldData,
 {
     bitfield: T,
+}
+
+impl<T> Debug for Bitfield<T>
+where 
+    T: BitfieldData 
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Bitfield").field("bitfield", &self.bitfield).finish()
+    }
+}
+impl<T> Display for Bitfield<T> 
+where 
+    T: BitfieldData 
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("Bitfield {:b}", self.bitfield))
+    }
 }
 
 impl<T> Bitfield<T>
@@ -46,7 +65,7 @@ where
     // Add two bitfields together
     pub fn add(&self, other: &Self) -> Bitfield<T> {
         Bitfield {
-            bitfield: other.bitfield | other.bitfield,
+            bitfield: self.bitfield | other.bitfield,
         }
     }
     // Remove a bitfield from another bitfield
@@ -60,10 +79,3 @@ where
         (self.bitfield & !other.bitfield) != T::default()
     }
 }
-
-// Types
-pub type BitfieldU8 = Bitfield<u8>;
-pub type BitfieldU16 = Bitfield<u16>;
-pub type BitfieldU32 = Bitfield<u32>;
-pub type BitfieldU64 = Bitfield<u64>;
-pub type BitfieldU128 = Bitfield<u128>;
