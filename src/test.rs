@@ -6,7 +6,6 @@ pub mod test {
     pub fn test() {
         let b1 = BitfieldU8::from_num(10);
         let b2 = BitfieldU8::from_num(11);
-
         assert!(b2.contains(&b1));
     }
 }

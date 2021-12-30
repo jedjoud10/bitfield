@@ -2,4 +2,4 @@
 mod bitfield;
 mod data;
 mod test;
-pub use bitfield::*;
+pub use self::bitfield::*;
