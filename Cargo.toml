@@ -1,5 +1,5 @@
 [package]
-name = "simple_bitfield"
+name = "bitfield"
 version = "0.1.0"
 edition = "2021"
 
