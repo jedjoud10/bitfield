@@ -9,6 +9,17 @@ where
     bitfield: T,
 }
 
+impl<T> std::ops::Deref for SimpleBitfield<T>
+where
+    T: BitfieldData,
+{
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.bitfield
+    }
+}
+
 impl<T> SimpleBitfield<T>
 where
     T: BitfieldData,
@@ -28,6 +39,10 @@ where
     // Increment the current bitfield (Shift to the left)
     pub fn increment(&mut self) {
         self.bitfield = self.bitfield << T::default_one();
+    }
+    // Get a reference to the simple bitfield's bitfield
+    pub fn bitfield(&self) -> T {
+        self.bitfield
     }
 }
 
