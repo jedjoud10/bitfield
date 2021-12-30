@@ -3,7 +3,7 @@ use std::fmt::{Debug, Display};
 use crate::data::BitfieldData;
 
 // A simple bitfield that contains a generic
-#[derive(Default, Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Bitfield<T>
 where
     T: BitfieldData,
@@ -64,18 +64,16 @@ where
 {
     // Add two bitfields together
     pub fn add(&self, other: &Self) -> Bitfield<T> {
-        Bitfield {
-            bitfield: self.bitfield | other.bitfield,
-        }
+        Self::from_num(self.bitfield | other.bitfield)
     }
     // Remove a bitfield from another bitfield
     pub fn remove(&self, other: &Self) -> Bitfield<T> {
-        Bitfield {
-            bitfield: !self.bitfield & other.bitfield,
-        }
+        Self::from_num(!self.bitfield & other.bitfield)
     }
     // Check if a bitfield is contained within another bitfield
     pub fn contains(&self, other: &Self) -> bool {
-        (self.bitfield & !other.bitfield) != T::default()
+        !Self::empty(&Self::from_num(self.bitfield & !other.bitfield))
     }
+    // Check if the bitfield is empty
+    pub fn empty(&self) -> bool { self.bitfield == T::default() }
 }
