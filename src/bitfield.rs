@@ -2,25 +2,14 @@ use crate::data::BitfieldData;
 
 // A simple bitfield that contains a generic
 #[derive(Default, Clone, Copy)]
-pub struct SimpleBitfield<T>
+pub struct Bitfield<T>
 where
     T: BitfieldData,
 {
     bitfield: T,
 }
 
-impl<T> std::ops::Deref for SimpleBitfield<T>
-where
-    T: BitfieldData,
-{
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.bitfield
-    }
-}
-
-impl<T> SimpleBitfield<T>
+impl<T> Bitfield<T>
 where
     T: BitfieldData,
 {
@@ -44,21 +33,25 @@ where
     pub fn bitfield(&self) -> T {
         self.bitfield
     }
+    // Set the bitfield's bitfield.
+    pub fn set_bitfield(&mut self, bitfield: T) {
+        self.bitfield = bitfield;
+    }
 }
 
-impl<T> SimpleBitfield<T>
+impl<T> Bitfield<T>
 where
     T: BitfieldData,
 {
     // Add two bitfields together
-    pub fn add(&self, other: &Self) -> SimpleBitfield<T> {
-        SimpleBitfield {
+    pub fn add(&self, other: &Self) -> Bitfield<T> {
+        Bitfield {
             bitfield: other.bitfield | other.bitfield,
         }
     }
     // Remove a bitfield from another bitfield
-    pub fn remove(&self, other: &Self) -> SimpleBitfield<T> {
-        SimpleBitfield {
+    pub fn remove(&self, other: &Self) -> Bitfield<T> {
+        Bitfield {
             bitfield: !self.bitfield & other.bitfield,
         }
     }
@@ -69,8 +62,8 @@ where
 }
 
 // Types
-pub type BitfieldU8 = SimpleBitfield<u8>;
-pub type BitfieldU16 = SimpleBitfield<u16>;
-pub type BitfieldU32 = SimpleBitfield<u32>;
-pub type BitfieldU64 = SimpleBitfield<u64>;
-pub type BitfieldU128 = SimpleBitfield<u128>;
+pub type BitfieldU8 = Bitfield<u8>;
+pub type BitfieldU16 = Bitfield<u16>;
+pub type BitfieldU32 = Bitfield<u32>;
+pub type BitfieldU64 = Bitfield<u64>;
+pub type BitfieldU128 = Bitfield<u128>;
