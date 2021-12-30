@@ -1,6 +1,6 @@
+#[cfg(test)]
 pub mod test {
     use crate::Bitfield;
-
 
     #[test]
     // Test the bitfield logic

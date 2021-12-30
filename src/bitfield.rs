@@ -12,16 +12,16 @@ where
 }
 
 impl<T> Debug for Bitfield<T>
-where 
-    T: BitfieldData 
+where
+    T: BitfieldData,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Bitfield").field("bitfield", &self.bitfield).finish()
     }
 }
-impl<T> Display for Bitfield<T> 
-where 
-    T: BitfieldData 
+impl<T> Display for Bitfield<T>
+where
+    T: BitfieldData,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!("Bitfield {:b}", self.bitfield))

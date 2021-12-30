@@ -12,7 +12,7 @@ pub trait BitfieldData:
     + Copy
     + Sized
     + Default
-    + Binary 
+    + Binary
     + Debug
 {
     fn default_one() -> Self;
