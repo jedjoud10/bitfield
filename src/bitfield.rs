@@ -72,7 +72,7 @@ where
     }
     // Check if a bitfield is contained within another bitfield
     pub fn contains(&self, other: &Self) -> bool {
-        !Self::empty(&Self::from_num(self.bitfield & !other.bitfield))
+        Self::empty(&Self::from_num(!self.bitfield & other.bitfield))
     }
     // Check if the bitfield is empty
     pub fn empty(&self) -> bool { self.bitfield == T::default() }
