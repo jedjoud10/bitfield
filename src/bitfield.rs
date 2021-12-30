@@ -1,6 +1,7 @@
 use crate::data::BitfieldData;
 
 // A simple bitfield that contains a generic
+#[derive(Default)]
 pub struct SimpleBitfield<T>
 where
     T: BitfieldData,
