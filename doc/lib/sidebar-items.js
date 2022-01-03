@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["AtomicSparseBitfield","An atomic sparse bitfield that can only be used to set bits manually We can set bits concurrently since it uses an AtomicU64 internally"],["Bitfield","A simple bitfield that contains a generic"]]});

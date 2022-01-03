@@ -1,7 +1,7 @@
 // Export
+mod atomic_sparse_bitfield;
 mod bitfield;
-mod atomic_buffered_bitfield;
 mod data;
 mod test;
+pub use self::atomic_sparse_bitfield::*;
 pub use self::bitfield::*;
-pub use self::atomic_buffered_bitfield::*;

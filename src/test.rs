@@ -2,7 +2,7 @@
 pub mod test {
     use std::{sync::Arc, thread::JoinHandle};
 
-    use crate::{Bitfield, AtomicBufferedBitfield};
+    use crate::{AtomicSparseBitfield, Bitfield};
 
     #[test]
     // Test the bitfield logic
@@ -20,7 +20,7 @@ pub mod test {
     #[test]
     // Test the atomic buffered bitfield logic
     pub fn test_atomic() {
-        let bitfield = AtomicBufferedBitfield::new();
+        let bitfield = AtomicSparseBitfield::new();
         // This should be empty
         assert!(!bitfield.get(0));
 
@@ -30,7 +30,7 @@ pub mod test {
         bitfield.set(2, true);
         bitfield.set(1, false);
         bitfield.set(65, false);
-        
+
         bitfield.set(100_000_000, true);
 
         // This should be filled
@@ -42,17 +42,19 @@ pub mod test {
 
     #[test]
     pub fn test_atomicity() {
-        let bitfield = Arc::new(AtomicBufferedBitfield::new());
-        let thread_join_handles = (0..10).map(|_| {
-            // Create a thread
-            let bitfield = bitfield.clone();
-            std::thread::spawn(move || {
-                // Change the bitfield a ton of times
-                for i in 0..1000 {
-                    bitfield.set(i, i % 2 == 0);
-                }
+        let bitfield = Arc::new(AtomicSparseBitfield::new());
+        let thread_join_handles = (0..10)
+            .map(|_| {
+                // Create a thread
+                let bitfield = bitfield.clone();
+                std::thread::spawn(move || {
+                    // Change the bitfield a ton of times
+                    for i in 0..1000 {
+                        bitfield.set(i, i % 2 == 0);
+                    }
+                })
             })
-        }).collect::<Vec<JoinHandle<()>>>();
+            .collect::<Vec<JoinHandle<()>>>();
 
         // Join up all the threads
         for x in thread_join_handles {
