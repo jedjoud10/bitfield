@@ -1,10 +1,8 @@
-use crate::data::BitfieldData;
 use std::{
-    collections::{hash_map::Entry, HashMap},
-    fmt::{Debug, Display},
+    collections::HashMap,
     sync::{
         atomic::{AtomicU64, Ordering},
-        Arc, RwLock,
+        RwLock,
     },
 };
 
@@ -32,9 +30,9 @@ impl AtomicSparseBitfield {
             // Get the bit value
             let old_atomic_val = atomic.load(Ordering::Relaxed);
             //println!("Get old {:b}", old_atomic_val);
-            let bit_val = ((old_atomic_val) >> bit_pos) % 2 == 1;
+
             //println!("Get shifted {:b}", (old_atomic_val) >> bit_pos);
-            bit_val
+            ((old_atomic_val) >> bit_pos) % 2 == 1
         } else {
             // The block does not exist!
             false
