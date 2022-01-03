@@ -8,6 +8,7 @@ pub trait BitfieldData:
     + std::ops::Not<Output = Self>
     + std::ops::Shl<Output = Self>
     + std::ops::Shr<Output = Self>
+    + std::ops::Rem<Output = Self>
     + std::cmp::PartialEq
     + Copy
     + Sized
