@@ -19,6 +19,14 @@ impl AtomicSparseBitfield {
             buffer: RwLock::new(HashMap::with_capacity(16)),
         }
     }
+    /// Create a new atomic sparse bitfield using an array of bools
+    pub fn from_bools(bools: &[bool]) -> Self {
+        let bitfield = Self::new();
+        for (location, bool_val) in bools.iter().enumerate() {
+            bitfield.set(location as u64, *bool_val);
+        }
+        bitfield
+    }
     /// Get a bit at a specific location
     pub fn get(&self, location: u64) -> bool {
         // Calculate some index stuff
