@@ -21,12 +21,20 @@ pub mod test {
         let y2 = Bitfield::<u8>::from_num(1); // 0000 0001
         let y3 = Bitfield::<u8>::from_num(3); // 0000 0011
         assert!(t1.contains(&t2));
-        assert!(t1.remove(&Bitfield::<u8>::from_num(156)).empty());
+        assert!(t1.remove(&Bitfield::<u8>::from_num(156)).unwrap().empty());
         assert!(!c1.contains(&c2));
         assert!(!y2.contains(&y1));
         assert!(!y1.contains(&y2));
         assert!(!y2.contains(&y3));
         assert!(y3.contains(&y2));
+    }
+
+    #[test]
+    pub fn test_removal() {
+        let b1 = Bitfield::<u8>::from_num(10); // 1010
+        let b2 = Bitfield::<u8>::from_num(11); // 1011
+        assert_eq!(b2.remove(&b1).unwrap(), Bitfield::<u8>::from_num(1)); // 0001
+        assert!(b1.remove(&b2).is_none()); // Not possible since b1 does not fully contain b2
     }
 
     #[test]

@@ -67,8 +67,9 @@ where
         Self::from_num(self.bitfield | other.bitfield)
     }
     /// Remove a bitfield from another bitfield
-    pub fn remove(&self, other: &Self) -> Bitfield<T> {
-        Self::from_num(!self.bitfield & other.bitfield)
+    pub fn remove(&self, other: &Self) -> Option<Bitfield<T>> {
+        if !self.contains(other) { return None; /* Self does not contain other, so we cannot remove it */ }
+        Some (Self::from_num(self.bitfield & !other.bitfield))
     }
     /// Check if *self* contains some bits from *other*. It doesn't have to be all bits though
     pub fn contains(&self, other: &Self) -> bool {
