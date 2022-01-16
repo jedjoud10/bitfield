@@ -74,10 +74,27 @@
 <span id="73">73</span>
 <span id="74">74</span>
 <span id="75">75</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>}, <span class="ident">sync</span>::{<span class="ident">atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">Ordering</span>}, <span class="ident">RwLock</span>, <span class="ident">Arc</span>}, <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">hash_map::Entry</span>}};
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::data::BitfieldData</span>;
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">collections::HashMap</span>,
+    <span class="ident">sync</span>::{
+        <span class="ident">atomic</span>::{<span class="ident">AtomicU64</span>, <span class="ident">Ordering</span>},
+        <span class="ident">RwLock</span>,
+    },
+};
 
-<span class="doccomment">/// An atomic sparse bitfield that can only be used to set bits manually</span>
+<span class="doccomment">/// An atomic sparse bitfield that can only be used to set bits manually.</span>
 <span class="doccomment">/// We can set bits concurrently since it uses an AtomicU64 internally</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AtomicSparseBitfield</span> {
     <span class="doccomment">/// The buffers and their corresponding padding</span>
@@ -87,8 +104,16 @@
     <span class="doccomment">/// Create a new empty atomic sparse bitfield</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
-            <span class="ident">buffer</span>: <span class="ident">RwLock::new</span>(<span class="ident">HashMap::with_capacity</span>(<span class="number">16</span>))
+            <span class="ident">buffer</span>: <span class="ident">RwLock::new</span>(<span class="ident">HashMap::with_capacity</span>(<span class="number">16</span>)),
         }
+    }
+    <span class="doccomment">/// Create a new atomic sparse bitfield using an array of bools</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bools</span>(<span class="ident">bools</span>: <span class="kw-2">&amp;</span>[<span class="ident">bool</span>]) -&gt; <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">bitfield</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::new</span>();
+        <span class="kw">for</span> (<span class="ident">location</span>, <span class="ident">bool_val</span>) <span class="kw">in</span> <span class="ident">bools</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
+            <span class="ident">bitfield</span>.<span class="ident">set</span>(<span class="ident">location</span> <span class="kw">as</span> <span class="ident">u64</span>, <span class="kw-2">*</span><span class="ident">bool_val</span>);
+        }
+        <span class="ident">bitfield</span>
     }
     <span class="doccomment">/// Get a bit at a specific location</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="ident">u64</span>) -&gt; <span class="ident">bool</span> {
@@ -101,27 +126,26 @@
             <span class="comment">// Get the bit value</span>
             <span class="kw">let</span> <span class="ident">old_atomic_val</span> <span class="op">=</span> <span class="ident">atomic</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
             <span class="comment">//println!(&quot;Get old {:b}&quot;, old_atomic_val);</span>
-            <span class="kw">let</span> <span class="ident">bit_val</span> <span class="op">=</span> ((<span class="ident">old_atomic_val</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">bit_pos</span>) <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">1</span>; 
+
             <span class="comment">//println!(&quot;Get shifted {:b}&quot;, (old_atomic_val) &gt;&gt; bit_pos);</span>
-            <span class="ident">bit_val</span>
+            ((<span class="ident">old_atomic_val</span>) <span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">bit_pos</span>) <span class="op">%</span> <span class="number">2</span> <span class="op">==</span> <span class="number">1</span>
         } <span class="kw">else</span> {
             <span class="comment">// The block does not exist!</span>
             <span class="bool-val">false</span>
         }
     }
     <span class="doccomment">/// Set the bit at a specific location, if that location does not exist, we will expand the hashmap</span>
-    <span class="doccomment">/// This returns the last bit that was stored at that position</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="ident">u64</span>, <span class="ident">bit</span>: <span class="ident">bool</span>) {
         <span class="comment">// Calculate some index stuff</span>
         <span class="kw">let</span> <span class="ident">block_pos</span> <span class="op">=</span> <span class="ident">location</span> <span class="op">/</span> <span class="number">64</span>;
         <span class="kw">let</span> <span class="ident">bit_pos</span> <span class="op">=</span> <span class="ident">location</span> <span class="op">%</span> <span class="number">64</span>;
         <span class="comment">// Check if we even have the block stored inside the buffer</span>
-        { 
+        {
             <span class="kw">let</span> <span class="ident">readable</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">atomic</span>) <span class="op">=</span> <span class="ident">readable</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">block_pos</span>) {
                 <span class="comment">// We have the block, so we can set the bit directly</span>
                 <span class="comment">// Create the new value using the bit</span>
-                <span class="kw">let</span> <span class="ident">bit_val</span> <span class="op">=</span> (<span class="number">1_u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bit_pos</span>; 
+                <span class="kw">let</span> <span class="ident">bit_val</span> <span class="op">=</span> (<span class="number">1_u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bit_pos</span>;
                 <span class="comment">// If we are setting the bit as &quot;true&quot;, we must OR it, but if we are setting it as &quot;false&quot;, we must AND it</span>
                 <span class="kw">let</span> <span class="ident">old_atomic_val</span> <span class="op">=</span> <span class="ident">atomic</span>.<span class="ident">load</span>(<span class="ident">Ordering::Relaxed</span>);
                 <span class="comment">//println!(&quot;Old {:b}&quot;, old_atomic_val);</span>
@@ -142,12 +166,13 @@
         <span class="comment">// We do not have the block, we must insert it</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writable</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">buffer</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
         <span class="comment">// Create the new value using the bit</span>
-        <span class="kw">let</span> <span class="ident">bit_val</span> <span class="op">=</span> (<span class="number">1_u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bit_pos</span>; 
-        <span class="comment">// Create the new block </span>
+        <span class="kw">let</span> <span class="ident">bit_val</span> <span class="op">=</span> (<span class="number">1_u64</span>) <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">bit_pos</span>;
+        <span class="comment">// Create the new block</span>
         <span class="comment">//println!(&quot;Insert {:b}&quot;, bit_val);</span>
         <span class="kw">let</span> <span class="ident">atomic</span> <span class="op">=</span> <span class="ident">AtomicU64::new</span>(<span class="kw">if</span> <span class="ident">bit</span> { <span class="ident">bit_val</span> } <span class="kw">else</span> { <span class="number">0</span> });
         <span class="ident">writable</span>.<span class="ident">insert</span>(<span class="ident">block_pos</span>, <span class="ident">atomic</span>);
     }
-}</code></pre></div>
+}
+</code></pre></div>
 </section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="lib" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.59.0-nightly (928783de6 2021-12-11)" ></div>
 </body></html>

@@ -13,8 +13,20 @@ pub mod test {
 
         let t1 = Bitfield::<u8>::from_num(156); // 1001 1100
         let t2 = Bitfield::<u8>::from_num(20); // 0001 0100
+
+        let c1 = Bitfield::<u8>::from_num(0); // 0000 0000
+        let c2 = Bitfield::<u8>::from_num(0); // 0000 0000
+
+        let y1 = Bitfield::<u8>::from_num(0); // 0000 0000
+        let y2 = Bitfield::<u8>::from_num(1); // 0000 0001
+        let y3 = Bitfield::<u8>::from_num(3); // 0000 0011
         assert!(t1.contains(&t2));
         assert!(t1.remove(&Bitfield::<u8>::from_num(156)).empty());
+        assert!(!c1.contains(&c2));
+        assert!(!y2.contains(&y1));
+        assert!(!y1.contains(&y2));
+        assert!(!y2.contains(&y3));
+        assert!(y3.contains(&y2));
     }
 
     #[test]

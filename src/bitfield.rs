@@ -70,9 +70,9 @@ where
     pub fn remove(&self, other: &Self) -> Bitfield<T> {
         Self::from_num(!self.bitfield & other.bitfield)
     }
-    /// Check if a bitfield is contained within another bitfield
+    /// Check if *self* contains some bits from *other*. It doesn't have to be all bits though
     pub fn contains(&self, other: &Self) -> bool {
-        Self::empty(&Self::from_num(!self.bitfield & other.bitfield))
+        Self::empty(&Self::from_num(!self.bitfield & other.bitfield)) && (!Self::empty(self) && !Self::empty(other))
     }
     /// Check if the bitfield is empty
     pub fn empty(&self) -> bool {
