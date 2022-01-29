@@ -85,5 +85,9 @@ pub mod test {
         for i in 0..1000 {
             println!("Bit {}: {}", i, bitfield.get(i));
         }
+
+        // Clear
+        bitfield.clear();
+        assert!(!bitfield.get(0));
     }
 }

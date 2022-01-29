@@ -83,4 +83,10 @@ impl AtomicSparseBitfield {
         let atomic = AtomicU64::new(if bit { (1_u64) << bit_pos } else { 0 });
         writable.insert(block_pos, atomic);
     }
+    /// Clear all the bits in this spartse bitfield
+    pub fn clear(&self) {
+        // Loop through every block and set it's atomic value to 0
+        let readable = self.buffer.read().unwrap();
+        for (_, atomic) in readable.iter() { atomic.store(0, Ordering::Relaxed) }
+    }
 }
