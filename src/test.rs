@@ -40,7 +40,7 @@ pub mod test {
     #[test]
     // Test the atomic buffered bitfield logic
     pub fn test_atomic() {
-        let bitfield = AtomicSparseBitfield::new();
+        let bitfield = AtomicSparseBitfield::new(8);
         // This should be empty
         assert!(!bitfield.get(0));
 
@@ -62,7 +62,7 @@ pub mod test {
 
     #[test]
     pub fn test_atomicity() {
-        let bitfield = Arc::new(AtomicSparseBitfield::new());
+        let bitfield = Arc::new(AtomicSparseBitfield::new(8));
         let thread_join_handles = (0..10)
             .map(|_| {
                 // Create a thread
