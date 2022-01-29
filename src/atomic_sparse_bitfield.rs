@@ -22,7 +22,7 @@ impl AtomicSparseBitfield {
     }
     /// Create a new atomic sparse bitfield using an array of bools
     pub fn from_bools(bools: &[bool]) -> Self {
-        let len = (bools.len() as u64).div_ceil(64_u64);
+        let len = ((bools.len() as u64) / (64_u64)) + 1;
         let bitfield = Self::new(len);
         for (location, bool_val) in bools.iter().enumerate() {
             bitfield.set(location as u64, *bool_val);
@@ -83,7 +83,7 @@ impl AtomicSparseBitfield {
         let atomic = AtomicU64::new(if bit { (1_u64) << bit_pos } else { 0 });
         writable.insert(block_pos, atomic);
     }
-    /// Clear all the bits in this spartse bitfield
+    /// Clear all the bits in this sparse bitfield
     pub fn clear(&self) {
         // Loop through every block and set it's atomic value to 0
         let readable = self.buffer.read().unwrap();
