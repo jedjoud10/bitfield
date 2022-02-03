@@ -13,6 +13,7 @@ pub struct AtomicSparseBitfield {
     /// The buffers and their corresponding padding
     buffer: RwLock<HashMap<u64, AtomicU64>>,
 }
+
 impl AtomicSparseBitfield {
     /// Create a new empty atomic sparse bitfield with a specified pre allocated chunks
     pub fn new(num: u64) -> Self {
