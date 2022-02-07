@@ -1,8 +1,6 @@
-use std::{
-    sync::{
-        atomic::{AtomicU64, Ordering},
-        RwLock,
-    },
+use std::sync::{
+    atomic::{AtomicU64, Ordering},
+    RwLock,
 };
 
 /// An atomic sparse bitfield that can only be used to set bits manually.
@@ -89,6 +87,8 @@ impl AtomicSparseBitfield {
     pub fn clear(&self) {
         // Loop through every block and set it's atomic value to 0
         let readable = self.buffer.read().unwrap();
-        for atomic in readable.iter() { atomic.store(0, Ordering::Relaxed) }
+        for atomic in readable.iter() {
+            atomic.store(0, Ordering::Relaxed)
+        }
     }
 }

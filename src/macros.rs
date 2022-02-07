@@ -1,8 +1,7 @@
 #[macro_export]
 macro_rules! impl_bitfield {
-    ($data: ty) => {        
-        impl Bitfield<$data>
-        {
+    ($data: ty) => {
+        impl Bitfield<$data> {
             /// Create a new empty bitfield
             pub fn new() -> Self {
                 Self { inner: 0 }
@@ -29,16 +28,17 @@ macro_rules! impl_bitfield {
             }
         }
 
-        impl Bitfield<$data>
-        {
+        impl Bitfield<$data> {
             /// Add two bitfields together
             pub fn add(&self, other: &Self) -> Bitfield<$data> {
                 Self::from_num(self.inner | other.inner)
             }
             /// Remove a bitfield from another bitfield
             pub fn remove(&self, other: &Self) -> Option<Bitfield<$data>> {
-                if !self.contains(other) { return None; /* Self does not contain other, so we cannot remove it */ }
-                Some (Self::from_num(self.inner & !other.inner))
+                if !self.contains(other) {
+                    return None; /* Self does not contain other, so we cannot remove it */
+                }
+                Some(Self::from_num(self.inner & !other.inner))
             }
             /// Check if *self* contains some bits from *other*. It doesn't have to be all bits though
             pub fn contains(&self, other: &Self) -> bool {

@@ -8,9 +8,7 @@ pub struct SparseBitfield {
 impl SparseBitfield {
     /// Create a new empty atomic sparse bitfield with a specified pre allocated blocks
     pub fn with_capacity(num: usize) -> Self {
-        Self {
-            buffer: vec![0; num],
-        }
+        Self { buffer: vec![0; num] }
     }
     /// Create a new atomic sparse bitfield using an array of bools
     pub fn from_bools(bools: &[bool]) -> Self {
@@ -52,7 +50,7 @@ impl SparseBitfield {
             } else {
                 // AND the NOT
                 *block & !bit_val
-            };            
+            };
             return;
         }
 
@@ -61,7 +59,7 @@ impl SparseBitfield {
         let block = if bit { (1_u128) << bit_pos } else { 0 };
         // Resize to fit, then add
         let len = (block_pos).checked_sub(self.buffer.len());
-        if let Some(len) = len {
+        if let Some(_) = len {
             self.buffer.resize(block_pos, 0);
             self.buffer.push(block);
         } else {
@@ -72,6 +70,8 @@ impl SparseBitfield {
     /// Clear all the bits in this sparse bitfield
     pub fn clear(&mut self) {
         // Loop through every block and set it's value to 0
-        for block in self.buffer.iter_mut() { *block = 0 }
+        for block in self.buffer.iter_mut() {
+            *block = 0
+        }
     }
 }

@@ -1,11 +1,10 @@
-use std::{fmt::{Debug, Display, Binary}};
+use std::fmt::{Binary, Debug, Display};
 
 use crate::impl_bitfield;
 
 /// A simple bitfield that contains a generic
 #[derive(Default, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Bitfield<T>
-{
+pub struct Bitfield<T> {
     inner: T,
 }
 
