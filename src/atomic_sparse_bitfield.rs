@@ -16,7 +16,7 @@ pub struct AtomicSparseBitfield {
 
 impl AtomicSparseBitfield {
     /// Create a new empty atomic sparse bitfield with a specified pre allocated chunks
-    pub fn new(num: u64) -> Self {
+    pub fn with_capacity(num: u64) -> Self {
         Self {
             buffer: RwLock::new(HashMap::from_iter((0..(num)).map(|x| (x, AtomicU64::new(0))))),
         }
@@ -24,7 +24,7 @@ impl AtomicSparseBitfield {
     /// Create a new atomic sparse bitfield using an array of bools
     pub fn from_bools(bools: &[bool]) -> Self {
         let len = ((bools.len() as u64) / (64_u64)) + 1;
-        let bitfield = Self::new(len);
+        let bitfield = Self::with_capacity(len);
         for (location, bool_val) in bools.iter().enumerate() {
             bitfield.set(location as u64, *bool_val);
         }
@@ -40,9 +40,6 @@ impl AtomicSparseBitfield {
             // We have the block, so we can read the bit directly
             // Get the bit value
             let old_atomic_val = atomic.load(Ordering::Relaxed);
-            //println!("Get old {:b}", old_atomic_val);
-
-            //println!("Get shifted {:b}", (old_atomic_val) >> bit_pos);
             ((old_atomic_val) >> bit_pos) % 2 == 1
         } else {
             // The block does not exist!
@@ -62,7 +59,6 @@ impl AtomicSparseBitfield {
             let bit_val = (1_u64) << bit_pos;
             // If we are setting the bit as "true", we must OR it, but if we are setting it as "false", we must AND it
             let old_atomic_val = atomic.load(Ordering::Relaxed);
-            //println!("Old {:b}", old_atomic_val);
             let new_atomic_val: u64 = if bit {
                 // OR it
                 old_atomic_val | bit_val
@@ -71,7 +67,6 @@ impl AtomicSparseBitfield {
                 old_atomic_val & !bit_val
             };
             // Set the atomic value
-            //println!("New {:b}", new_atomic_val);
             atomic.store(new_atomic_val, Ordering::Relaxed);
             return;
         }
@@ -80,7 +75,6 @@ impl AtomicSparseBitfield {
         // We do not have the block, we must insert it
         let mut writable = self.buffer.write().unwrap();
         // Create the new block
-        //println!("Insert {:b}", bit_val);
         let atomic = AtomicU64::new(if bit { (1_u64) << bit_pos } else { 0 });
         writable.insert(block_pos, atomic);
     }

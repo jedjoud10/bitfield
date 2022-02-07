@@ -2,7 +2,7 @@
 pub mod test {
     use std::{sync::Arc, thread::JoinHandle};
 
-    use crate::{AtomicSparseBitfield, Bitfield};
+    use crate::{AtomicSparseBitfield, Bitfield, SparseBitfield};
 
     #[test]
     // Test the bitfield logic
@@ -40,7 +40,29 @@ pub mod test {
     #[test]
     // Test the atomic buffered bitfield logic
     pub fn test_atomic() {
-        let bitfield = AtomicSparseBitfield::new(8);
+        let bitfield = AtomicSparseBitfield::with_capacity(8);
+        // This should be empty
+        assert!(!bitfield.get(0));
+
+        // Set the bit
+        bitfield.set(0, true);
+        bitfield.set(1, true);
+        bitfield.set(2, true);
+        bitfield.set(1, false);
+        bitfield.set(65, false);
+
+        bitfield.set(100_000_000, true);
+
+        // This should be filled
+        assert!(bitfield.get(0));
+        assert!(!bitfield.get(1));
+        assert!(!bitfield.get(65));
+        assert!(bitfield.get(100_000_000));
+    }
+    #[test]
+    // Test the sparse buffered bitfield logic
+    pub fn test_sparse() {
+        let mut bitfield = SparseBitfield::with_capacity(8);
         // This should be empty
         assert!(!bitfield.get(0));
 
@@ -62,7 +84,7 @@ pub mod test {
 
     #[test]
     pub fn test_atomicity() {
-        let bitfield = Arc::new(AtomicSparseBitfield::new(8));
+        let bitfield = Arc::new(AtomicSparseBitfield::with_capacity(8));
         let thread_join_handles = (0..10)
             .map(|_| {
                 // Create a thread
