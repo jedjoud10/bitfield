@@ -118,6 +118,8 @@
 <span id="113">113</span>
 <span id="114">114</span>
 <span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
 </pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">sync::Arc</span>, <span class="ident">thread::JoinHandle</span>};
@@ -175,6 +177,7 @@
 
         <span class="comment">// This should be filled</span>
         <span class="macro">assert!</span>(<span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">0</span>));
+        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="ident">usize::MAX</span>));
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">1</span>));
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">65</span>));
         <span class="macro">assert!</span>(<span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">100_000_000</span>));
@@ -197,6 +200,7 @@
 
         <span class="comment">// This should be filled</span>
         <span class="macro">assert!</span>(<span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">0</span>));
+        <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="ident">usize::MAX</span>));
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">1</span>));
         <span class="macro">assert!</span>(<span class="op">!</span><span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">65</span>));
         <span class="macro">assert!</span>(<span class="ident">bitfield</span>.<span class="ident">get</span>(<span class="number">100_000_000</span>));

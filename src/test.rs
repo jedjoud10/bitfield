@@ -55,6 +55,7 @@ pub mod test {
 
         // This should be filled
         assert!(bitfield.get(0));
+        assert!(!bitfield.get(usize::MAX));
         assert!(!bitfield.get(1));
         assert!(!bitfield.get(65));
         assert!(bitfield.get(100_000_000));
@@ -77,6 +78,7 @@ pub mod test {
 
         // This should be filled
         assert!(bitfield.get(0));
+        assert!(!bitfield.get(usize::MAX));
         assert!(!bitfield.get(1));
         assert!(!bitfield.get(65));
         assert!(bitfield.get(100_000_000));
