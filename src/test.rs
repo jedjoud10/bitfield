@@ -27,6 +27,9 @@ pub mod test {
         assert!(!y1.contains(&y2));
         assert!(!y2.contains(&y3));
         assert!(y3.contains(&y2));
+        let empty = Bitfield::<u32>::new();
+        let valid = Bitfield::<u32>::from_num(156);
+        assert!(!empty.contains(&valid));
     }
 
     #[test]

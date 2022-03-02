@@ -1,7 +1,6 @@
 // Export
 mod atomic_sparse_bitfield;
 mod bitfield;
-mod macros;
 mod sparse_bitfield;
 mod test;
 pub use self::atomic_sparse_bitfield::*;

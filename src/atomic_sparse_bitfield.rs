@@ -13,12 +13,14 @@ pub struct AtomicSparseBitfield {
 
 impl AtomicSparseBitfield {
     /// Create a new empty atomic sparse bitfield with a specified pre allocated chunks
+    #[inline(always)]
     pub fn with_capacity(num: usize) -> Self {
         Self {
             buffer: RwLock::new(Vec::from_iter((0..(num)).map(|_| AtomicU64::new(0)))),
         }
     }
     /// Create a new atomic sparse bitfield using an array of bools
+    #[inline(always)]
     pub fn from_bools(bools: &[bool]) -> Self {
         let len = ((bools.len() as u64) / (64_u64)) + 1;
         let bitfield = Self::with_capacity(len as usize);
@@ -28,6 +30,7 @@ impl AtomicSparseBitfield {
         bitfield
     }
     /// Get a bit at a specific location
+    #[inline(always)]
     pub fn get(&self, location: usize) -> bool {
         // Calculate some index stuff
         let block_pos = location / 64;
@@ -44,6 +47,7 @@ impl AtomicSparseBitfield {
         }
     }
     /// Set the bit at a specific location, if that location does not exist, we will expand the hashmap
+    #[inline(always)]
     pub fn set(&self, location: usize, bit: bool) {
         // Calculate some index stuff
         let block_pos = location / 64;
@@ -84,6 +88,7 @@ impl AtomicSparseBitfield {
         }
     }
     /// Clear all the bits in this sparse bitfield
+    #[inline(always)]
     pub fn clear(&self) {
         // Loop through every block and set it's atomic value to 0
         let readable = self.buffer.read().unwrap();
