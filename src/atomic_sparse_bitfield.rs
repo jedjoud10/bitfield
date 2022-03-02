@@ -14,9 +14,9 @@ pub struct AtomicSparseBitfield {
 impl AtomicSparseBitfield {
     /// Create a new empty atomic sparse bitfield with a specified pre allocated chunks
     #[inline(always)]
-    pub fn with_capacity(num: usize) -> Self {
+    pub fn with_capacity(capacity: usize) -> Self {
         Self {
-            buffer: RwLock::new(Vec::from_iter((0..(num)).map(|_| AtomicU64::new(0)))),
+            buffer: RwLock::new(Vec::from_iter((0..(capacity)).map(|_| AtomicU64::new(0)))),
         }
     }
     /// Create a new atomic sparse bitfield using an array of bools
