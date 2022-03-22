@@ -121,17 +121,17 @@ pub mod test {
     #[test]
     pub fn test_operations() {
         // 0
-        let zero = Bitfield::<i32>::zero();
+        let zero = Bitfield::<u64>::zero();
         // 1
-        let one = Bitfield::<i32>::one();
+        let one = Bitfield::<u64>::one();
         // 2
-        let two = Bitfield::<i32>::from(2);
+        let two = Bitfield::<u64>::from(2);
         // 4
-        let four = Bitfield::<i32>::from(4);
-
+        let four = Bitfield::<u64>::from(4);
+        let test = zero & two;
         assert_eq!(zero & zero, zero);
         assert_eq!(one & one, one);
         assert_eq!(zero | one, one);
-        assert_eq!(two | four, Bitfield::<i32>::from(6));
+        assert_eq!(two | four, Bitfield::<u64>::from(6));
     }
 }

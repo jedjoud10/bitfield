@@ -13,6 +13,7 @@ pub struct AtomicSparseBitfield {
 
 impl AtomicSparseBitfield {
     /// Create a new empty sparse bitfield
+    #[inline(always)]
     pub fn new() -> Self {
         Self::default()
     }

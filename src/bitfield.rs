@@ -39,10 +39,12 @@ impl<T: Bit> From<T> for Bitfield<T> {
 
 impl<T: num::Integer + Copy + Bit> Bitfield<T> {
     /// Zero
+    #[inline(always)]
     pub fn zero() -> Self {
         Self { inner: T::zero() }
     }
     /// One
+    #[inline(always)]
     pub fn one() -> Self {
         Self { inner: T::one() }
     }

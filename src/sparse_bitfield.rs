@@ -7,14 +7,17 @@ pub struct SparseBitfield {
 
 impl SparseBitfield {
     /// Create a new empty sparse bitfield
+    #[inline(always)]
     pub fn new() -> Self {
         Self::default()
     }
     /// Create a new empty atomic sparse bitfield with a specified pre allocated blocks
+    #[inline(always)]
     pub fn with_capacity(num: usize) -> Self {
         Self { buffer: vec![0; num] }
     }
     /// Create a new atomic sparse bitfield using an array of bools
+    #[inline(always)]
     pub fn from_bools(bools: &[bool]) -> Self {
         let len = ((bools.len() as usize) / (128_usize)) + 1;
         let mut bitfield = Self::with_capacity(len);
@@ -24,6 +27,7 @@ impl SparseBitfield {
         bitfield
     }
     /// Get a bit at a specific location
+    #[inline(always)]
     pub fn get(&self, location: usize) -> bool {
         // Calculate some index stuff
         let block_pos = location / 128;
@@ -38,6 +42,7 @@ impl SparseBitfield {
         }
     }
     /// Set the bit at a specific location, if that location does not exist, we will expand the hashmap
+    #[inline(always)]
     pub fn set(&mut self, location: usize, bit: bool) {
         // Calculate some index stuff
         let block_pos = location / 128;
@@ -72,6 +77,7 @@ impl SparseBitfield {
         }
     }
     /// Clear all the bits in this sparse bitfield
+    #[inline(always)]
     pub fn clear(&mut self) {
         // Loop through every block and set it's value to 0
         for block in self.buffer.iter_mut() {
