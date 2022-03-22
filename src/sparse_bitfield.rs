@@ -6,7 +6,7 @@ pub struct SparseBitfield {
 }
 
 impl SparseBitfield {
-    /// Create a new empty sparse bitfield 
+    /// Create a new empty sparse bitfield
     pub fn new() -> Self {
         Self::default()
     }

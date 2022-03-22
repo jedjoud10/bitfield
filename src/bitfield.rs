@@ -1,14 +1,10 @@
 use getset::*;
-use std::{fmt::{Binary, Debug, Display}, ops::{BitOr, BitAnd, BitXor, BitAndAssign, BitOrAssign, BitXorAssign}};
+use std::{
+    fmt::{Binary, Debug, Display},
+    ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign},
+};
 
-
-pub trait Bit: 
-    BitAnd<Output = Self> +
-    BitOr<Output = Self> +
-    BitXor<Output = Self> +    
-    Sized +
-    Copy +
-    num::Integer {}
+pub trait Bit: BitAnd<Output = Self> + BitOr<Output = Self> + BitXor<Output = Self> + Sized + Copy + num::Integer {}
 impl<T> Bit for T where T: BitAnd<Output = Self> + BitOr<Output = Self> + BitXor<Output = Self> + Sized + Copy + num::Integer {}
 /// A simple bitfield that contains a generic
 #[derive(Default, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Getters, Setters, MutGetters, CopyGetters)]
