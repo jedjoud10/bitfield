@@ -12,6 +12,10 @@ pub struct AtomicSparseBitfield {
 }
 
 impl AtomicSparseBitfield {
+    /// Create a new empty sparse bitfield 
+    pub fn new() -> Self {
+        Self::default()
+    }
     /// Create a new empty atomic sparse bitfield with a specified pre allocated chunks
     #[inline(always)]
     pub fn with_capacity(capacity: usize) -> Self {

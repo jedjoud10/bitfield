@@ -7,36 +7,36 @@ pub mod test {
     #[test]
     // Test the bitfield logic
     pub fn test() {
-        let b1 = Bitfield::<u8>::from_num(10); // 1010
-        let b2 = Bitfield::<u8>::from_num(11); // 1011
+        let b1 = Bitfield::<u8>::from(10); // 1010
+        let b2 = Bitfield::<u8>::from(11); // 1011
         assert!(b2.contains(&b1));
 
-        let t1 = Bitfield::<u32>::from_num(156); // 1001 1100
-        let t2 = Bitfield::<u32>::from_num(20); // 0001 0100
+        let t1 = Bitfield::<u32>::from(156); // 1001 1100
+        let t2 = Bitfield::<u32>::from(20); // 0001 0100
 
-        let c1 = Bitfield::<usize>::from_num(0); // 0000 0000
-        let c2 = Bitfield::<usize>::from_num(0); // 0000 0000
+        let c1 = Bitfield::<usize>::from(0); // 0000 0000
+        let c2 = Bitfield::<usize>::from(0); // 0000 0000
 
-        let y1 = Bitfield::<u8>::from_num(0); // 0000 0000
-        let y2 = Bitfield::<u8>::from_num(1); // 0000 0001
-        let y3 = Bitfield::<u8>::from_num(3); // 0000 0011
+        let y1 = Bitfield::<u8>::from(0); // 0000 0000
+        let y2 = Bitfield::<u8>::from(1); // 0000 0001
+        let y3 = Bitfield::<u8>::from(3); // 0000 0011
         assert!(t1.contains(&t2));
-        assert!(t1.remove(&Bitfield::<u32>::from_num(156)).unwrap().empty());
+        assert!(t1.remove(&Bitfield::<u32>::from(156)).unwrap().empty());
         assert!(!c1.contains(&c2));
         assert!(!y2.contains(&y1));
         assert!(!y1.contains(&y2));
         assert!(!y2.contains(&y3));
         assert!(y3.contains(&y2));
         let empty = Bitfield::<u32>::new();
-        let valid = Bitfield::<u32>::from_num(156);
+        let valid = Bitfield::<u32>::from(156);
         assert!(!empty.contains(&valid));
     }
 
     #[test]
     pub fn test_removal() {
-        let b1 = Bitfield::<u8>::from_num(10); // 1010
-        let b2 = Bitfield::<u8>::from_num(11); // 1011
-        assert_eq!(b2.remove(&b1).unwrap(), Bitfield::<u8>::from_num(1)); // 0001
+        let b1 = Bitfield::<u8>::from(10); // 1010
+        let b2 = Bitfield::<u8>::from(11); // 1011
+        assert_eq!(b2.remove(&b1).unwrap(), Bitfield::<u8>::from(1)); // 0001
         assert!(b1.remove(&b2).is_none()); // Not possible since b1 does not fully contain b2
     }
 
@@ -116,5 +116,22 @@ pub mod test {
         // Clear
         bitfield.clear();
         assert!(!bitfield.get(0));
+    }
+
+    #[test]
+    pub fn test_operations() {
+        // 0
+        let zero = Bitfield::<i32>::zero();
+        // 1
+        let one = Bitfield::<i32>::one();
+        // 2
+        let two = Bitfield::<i32>::from(2);
+        // 4
+        let four = Bitfield::<i32>::from(4);
+
+        assert_eq!(zero & zero, zero);
+        assert_eq!(one & one, one);
+        assert_eq!(zero | one, one);
+        assert_eq!(two | four, Bitfield::<i32>::from(6));
     }
 }

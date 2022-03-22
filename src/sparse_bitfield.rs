@@ -6,6 +6,10 @@ pub struct SparseBitfield {
 }
 
 impl SparseBitfield {
+    /// Create a new empty sparse bitfield 
+    pub fn new() -> Self {
+        Self::default()
+    }
     /// Create a new empty atomic sparse bitfield with a specified pre allocated blocks
     pub fn with_capacity(num: usize) -> Self {
         Self { buffer: vec![0; num] }
